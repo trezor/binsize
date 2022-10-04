@@ -1,0 +1,6 @@
+{
+    "root": "/home/user/trezor-firmware/core",
+    "elf_file": "{{root}}/build/firmware/firmware.elf",
+    "map_file": "{{root}}/build/firmware/firmware.map",
+    "build_cmd": "make -C {{root}} build_firmware"
+}
