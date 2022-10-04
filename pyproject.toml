@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "binsize"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tool to analyze the size of a binary from .elf file"
 license = "MIT"
 authors = [
@@ -12,7 +12,7 @@ repository = "https://github.com/grdddj/binsize"
 keywords = ["binary size", "code size", ".elf file"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 click = "^8.1.3"
 typing-extensions = "*"
 termcolor = "^2.0.1"
