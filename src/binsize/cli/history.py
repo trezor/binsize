@@ -63,19 +63,17 @@ def get_fw_path(commit_hash: str) -> Path:
 
 @contextmanager
 def change_to_commit_and_back(commit_hash: str) -> Generator[None, None, None]:
+    """Context manager that changes to the given commit and then back."""
     current_branch = get_current_branch_name()
-    local_changes = are_there_local_changes()
-    if local_changes:
-        run_cmd(["git", "stash"])
+    # NOTE: will fail if there are some local uncommited changed
     run_cmd(["git", "checkout", commit_hash])
     yield
     run_cmd(["git", "reset", "--hard", "HEAD"])
     run_cmd(["git", "checkout", current_branch])
-    if local_changes:
-        run_cmd(["git", "stash", "pop"])
 
 
 def build_and_rename_fw(commit_hash: str) -> None:
+    """Builds the binary at a specific commit hash and renames it according to it."""
     new_path = get_fw_path(commit_hash)
     if new_path.exists():
         print(f"Binary already exists for commit {commit_hash}")
@@ -83,11 +81,14 @@ def build_and_rename_fw(commit_hash: str) -> None:
 
     with change_to_commit_and_back(commit_hash):
         print(f"Building binary for commit {commit_hash}...")
+        # Need to download all the submodules for the current state
+        run_cmd(["git", "submodule", "update", "--init", "--recursive", "--force"])
         run_cmd(BUILD_CMD.split())
         shutil.copyfile(ELF_FILE, new_path)
 
 
 def create_binaries(commit_hashes: list[str]) -> None:
+    """Build multiple binaries given list of commit hashes."""
     for commit_hash in commit_hashes:
         print(commit_hash, get_commit_date(commit_hash))
         build_and_rename_fw(commit_hash)
@@ -128,6 +129,7 @@ def history(commits: int, step: int, sections: list[str]) -> None:
     """Show the size of the binary over time."""
     print(f"Going {commits} commits into past with step {step}")
 
+    # First building all the binaries and then analyzing them
     commit_hashes = generate_hashes_from_past(commits, step)
     create_binaries(commit_hashes)
     analyze_sizes(commit_hashes, sections)
