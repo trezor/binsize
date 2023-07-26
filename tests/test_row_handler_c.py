@@ -72,7 +72,7 @@ def test_clean_special_symbols(symbol: str, symbol_after: str):
             False,
         ),
         (
-            "embed/extmod/modtrezorui/qr-code-generator/qrcodegen.c:204",
+            "embed/extmod/modtrezorui/qr-code-generator/qrcodegen.c:207",
             False,
         ),
         (
@@ -117,7 +117,7 @@ def test_add_basic_info_row_handlers():
     [
         (
             "secp256k1_ecmult_gen_prec_table",
-            "vendor/secp256k1-zkp/src/precomputed_ecmult_gen.c:14",
+            "vendor/secp256k1-zkp/src/precomputed_ecmult_gen.c:11",
         ),
         (
             "nist256p1",
@@ -129,7 +129,7 @@ def test_add_basic_info_row_handlers():
         ),
         (
             "mp_qstr_const_pool",
-            "vendor/micropython/py/qstr.c:103",
+            "vendor/micropython/py/qstr.c:93",
         ),
         (
             "ge25519_niels_base_multiples",
@@ -137,7 +137,7 @@ def test_add_basic_info_row_handlers():
         ),
         (
             "qrcodegen_encodeSegmentsAdvanced",
-            "vendor/QR-Code-generator/c/qrcodegen.c:204",
+            "vendor/QR-Code-generator/c/qrcodegen.c:207",
         ),
         (
             "curve25519_mul",
@@ -153,7 +153,7 @@ def test_add_basic_info_row_handlers():
         ),
         (
             "words_button_seq",
-            "vendor/trezor-crypto/slip39_wordlist.h:219",
+            "vendor/trezor-crypto/slip39_wordlist.h:44",
         ),
         (
             "mod_trezorconfig_check_pin_obj",
@@ -182,10 +182,6 @@ def test_add_basic_info_row_handlers():
         (
             "aes_decrypt_key192",
             "vendor/trezor-crypto/aes/aesopt.h",
-        ),
-        (
-            "mp_frozen_mpy_names",
-            "vendor/micropython/py/frozenmod.c",
         ),
         (
             "mp_type_RuntimeError",

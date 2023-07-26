@@ -17,20 +17,14 @@ def test_module_object_definitions_general():
     # Just top-level functions
     mod = get_module_object_definitions("src/apps/binance/sign_tx.py")
     assert mod.start_line == 0
-    assert mod.end_line == 61
+    assert mod.end_line == 63
     assert mod.classes == []
-    assert len(mod.functions) == 2
+    assert len(mod.functions) == 1
     assert mod.has_top_level_func("sign_tx")
     sign_tx = mod.get_func("sign_tx")
     assert sign_tx is not None
-    assert sign_tx.start_line == 21
-    assert sign_tx.end_line == 56
-    assert mod.has_top_level_func("generate_content_signature")
-    generate_content_signature = mod.get_func("generate_content_signature")
-    assert generate_content_signature is not None
-    assert generate_content_signature.start_line == 59
-    assert generate_content_signature.end_line == 61
-    assert not mod.has_top_level_func("unexisting")
+    assert sign_tx.start_line == 11
+    assert sign_tx.end_line == 63
     unexisting = mod.get_func("unexisting")
     assert unexisting is None
 
@@ -62,15 +56,6 @@ def test_module_object_definitions_general():
     assert race_class is not None
     assert race_class.has_top_level_func("_finish")
 
-    # Nested classes
-    mod = get_module_object_definitions("src/trezor/ui/components/tt/info.py")
-    first = mod.get_class("DefaultInfoConfirm")
-    assert first is not None
-    second = first.get_class("button")
-    assert second is not None
-    third = second.get_class("disabled")
-    assert third is not None
-
     # Nested functions
     mod = get_module_object_definitions("src/storage/cache.py")
     assert mod.has_top_level_func("stored_async")
@@ -93,19 +78,19 @@ def test_module_object_definitions_symbol_resolution():
     # Symbol resolution functions in classes
     mod = get_module_object_definitions("src/apps/monero/xmr/bulletproof.py")
     assert (
-        mod.resolve_symbol("BulletProofBuilder__prove_phase1")
-        == "BulletProofBuilder._prove_phase1()"
+        mod.resolve_symbol("BulletProofPlusBuilder__gprec_aux")
+        == "BulletProofPlusBuilder._gprec_aux()"
     )
 
 
 def test_module_object_definitions_line_number():
     # Getting line number
     mod = get_module_object_definitions("src/trezor/loop.py")
-    assert mod.get_line_number("chan._schedule_take()") == 450
+    assert mod.get_line_number("chan._schedule_take()") == 428
     mod = get_module_object_definitions("src/storage/cache.py")
-    assert mod.get_line_number("stored_async()") == 287
+    assert mod.get_line_number("stored_async()") == 329
     mod = get_module_object_definitions("src/apps/monero/xmr/bulletproof.py")
-    assert mod.get_line_number("BulletProofBuilder._prove_phase1()") == 1787
+    assert mod.get_line_number("KeyVPrecomp.to()") == 662
 
     # Unexisting function
     mod = get_module_object_definitions("src/apps/monero/xmr/bulletproof.py")
@@ -152,19 +137,14 @@ def test_module_object_definitions_line_number():
             "BulletProofPlusBuilder._prove_batch_main()",
         ),
         (
-            "produce_transfer_json_make_input_output",
-            "src/apps/binance/helpers.py",
-            "produce_transfer_json()",
+            "require_confirm_transfer_make_input_output_pages",
+            "src/apps/binance/layout.py",
+            "require_confirm_transfer()",
         ),
         (
             "chan_put",
             "src/trezor/loop.py",
             "chan.put()",
-        ),
-        (
-            "ButtonMono_disabled",
-            "src/trezor/ui/components/tt/button.py",
-            "ButtonMono.disabled",
         ),
         ("__lt_dictcomp_gt_", "src/storage/device.py", ""),
     ],
@@ -208,11 +188,6 @@ def test_remove_strange_suffixes(input: str, output: str):
         (
             "apps_monero_xmr_serialize_base_types",
             "src/apps/monero/xmr/serialize/base_types.py",
-            True,
-        ),
-        (
-            "trezor_ui_layouts_tt___init__",
-            "src/trezor/ui/layouts/tt/__init__.py",
             True,
         ),
         (
@@ -280,9 +255,9 @@ def test_resolve_module(symbol: str, module: str, is_valid: bool):
             "get_features",
         ),
         (
-            "fun_data_apps_monero_xmr_bulletproof__lt_module_gt__BulletProofBuilder__prove_phase1",
+            "fun_data_apps_monero_xmr_bulletproof__lt_module_gt__BulletProofPlusBuilder__gprec_aux",
             "src/apps/monero/xmr/bulletproof.py",
-            "BulletProofBuilder._prove_phase1()",
+            "BulletProofPlusBuilder._gprec_aux()",
         ),
         (
             "const_table_data_apps_bitcoin_sign_tx_approvers__lt_module_gt__Approver_finish_payment_request",
@@ -295,9 +270,9 @@ def test_resolve_module(symbol: str, module: str, is_valid: bool):
             "BasicApprover.approve_orig_txids()",
         ),
         (
-            "const_table_data_apps_bitcoin_keychain__lt_module_gt__get_schemas_for_coin__lt_listcomp_gt_2",
+            "const_table_data_apps_bitcoin_keychain__lt_module_gt___get_schemas_for_coin__lt_listcomp_gt_2",
             "src/apps/bitcoin/keychain.py",
-            "get_schemas_for_coin()",
+            "_get_schemas_for_coin()",
         ),
         (
             "const_table_data_trezor_crypto_base32__lt_module_gt___lt_dictcomp_gt_",
@@ -323,12 +298,12 @@ def test_get_module_and_function(symbol: str, module: str, func: str):
 def test_add_basic_info_row_handlers():
     new_row = MPR.add_basic_info(
         mock_data_row(
-            symbol_name="const_table_data_apps_bitcoin_keychain__lt_module_gt__get_schemas_for_coin__lt_listcomp_gt_2"
+            symbol_name="const_table_data_apps_bitcoin_keychain__lt_module_gt___get_schemas_for_coin__lt_listcomp_gt_2"
         )
     )
     assert new_row.language == "mpy"
     assert new_row.module_name == "src/apps/bitcoin/keychain.py"
-    assert new_row.func_name == "get_schemas_for_coin()"
+    assert new_row.func_name == "_get_schemas_for_coin()"
 
 
 @pytest.mark.parametrize(
@@ -341,18 +316,18 @@ def test_add_basic_info_row_handlers():
         ),
         (
             "src/apps/webauthn/fido2.py",
-            "cbor_make_credential_process()",
-            "src/apps/webauthn/fido2.py:1450",
+            "_cbor_make_credential_process()",
+            "src/apps/webauthn/fido2.py:1484",
         ),
         (
             "src/apps/bitcoin/sign_tx/payment_request.py",
             "PaymentRequestVerifier",
-            "src/apps/bitcoin/sign_tx/payment_request.py:24",
+            "src/apps/bitcoin/sign_tx/payment_request.py:18",
         ),
         (
             "src/apps/bitcoin/sign_tx/payment_request.py",
             "PaymentRequestVerifier.__init__()",
-            "src/apps/bitcoin/sign_tx/payment_request.py:31",
+            "src/apps/bitcoin/sign_tx/payment_request.py:25",
         ),
         (
             "src/apps/bitcoin/sign_tx/payment_request.py",

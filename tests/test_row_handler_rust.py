@@ -170,12 +170,12 @@ def test_add_basic_info_row_handlers():
         (
             "embed/rust/src/protobuf/encode.rs",
             "Encoder::encode_field()",
-            "embed/rust/src/protobuf/encode.rs:98",
+            "embed/rust/src/protobuf/encode.rs:86",
         ),
         (
             "embed/rust/src/protobuf/obj.rs",
             "msg_obj_attr()",
-            "embed/rust/src/protobuf/obj.rs:132",
+            "embed/rust/src/protobuf/obj.rs:134",
         ),
         (
             "embed/rust/src/micropython/runtime.rs",
