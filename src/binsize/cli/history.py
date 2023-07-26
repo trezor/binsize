@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 import subprocess
+import sys
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
@@ -65,7 +66,9 @@ def get_fw_path(commit_hash: str) -> Path:
 def change_to_commit_and_back(commit_hash: str) -> Generator[None, None, None]:
     """Context manager that changes to the given commit and then back."""
     current_branch = get_current_branch_name()
-    # NOTE: will fail if there are some local uncommited changed
+    # Fails if there are some local uncommited changes
+    if are_there_local_changes():
+        sys.exit(1)
     run_cmd(["git", "checkout", commit_hash])
     yield
     run_cmd(["git", "reset", "--hard", "HEAD"])
@@ -90,8 +93,12 @@ def build_and_rename_fw(commit_hash: str) -> None:
 def create_binaries(commit_hashes: list[str]) -> None:
     """Build multiple binaries given list of commit hashes."""
     for commit_hash in commit_hashes:
-        print(commit_hash, get_commit_date(commit_hash))
-        build_and_rename_fw(commit_hash)
+        try:
+            print(commit_hash, get_commit_date(commit_hash))
+            build_and_rename_fw(commit_hash)
+        except Exception as e:
+            print(f"ERRROOOR: Failed to build binary for commit {commit_hash}: {e}")
+            run_cmd(["git", "reset", "--hard", "HEAD"])
 
 
 def analyze_sizes(
