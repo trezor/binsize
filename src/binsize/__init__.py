@@ -17,4 +17,4 @@ __all__ = [
     "show_map_file_tree",
 ]
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
