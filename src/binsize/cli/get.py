@@ -76,6 +76,7 @@ from .build import build_binary
 )
 @click.option("-S", "--no-sort", "--ns", is_flag=True, help="Do not sort by size")
 @click.option("-P", "--no-processing", "--np", is_flag=True, help="See just raw data")
+@click.option("-D", "--debug", is_flag=True, help="See also raw symbol data")
 def get(
     elf_file: str,
     map_file: str | None,
@@ -90,6 +91,7 @@ def get(
     no_processing: bool,
     no_sort: bool,
     no_aggregation: bool,
+    debug: bool,
 ) -> None:
     """Analyze a single binary."""
 
@@ -101,7 +103,7 @@ def get(
     BS.load_file(elf_file, sections=sections)
 
     if no_processing:
-        return BS.show()
+        return BS.show(output_file or None)
 
     if map_file and sections:
         BS.use_map_file(map_file, sections=sections)
@@ -132,10 +134,7 @@ def get(
     if add_definitions:
         BS.add_definitions()
 
-    if output_file:
-        BS.show(output_file)
-    else:
-        BS.show()
+    BS.show(output_file or None, debug=debug)
 
 
 if "__main__" == __name__:
