@@ -147,21 +147,42 @@ class MicropythonRow(CommonRow):
             if symbol_name.startswith(prefix):
                 symbol_name = symbol_name[len(prefix) :]
 
-        # There are possible numbers at the end, delete them
-        symbol_name = re.sub(r"__lt_module_gt__\d+$", "__lt_module_gt__", symbol_name)
+        # There are possible numbers at the end, delete them, unless it really is there
+        exceptions = [
+            "blake_hash_writer_32",
+            "_migrate_from_version_01",
+            "sha256d_32",
+            "groestl512d_32",
+            "blake256d_32",
+            "keccak_32",
+            "ripemd160_32",
+        ]
+        if not any(symbol_name.endswith(ex) for ex in exceptions):
+            symbol_name = re.sub(r"_\d+$", "", symbol_name)
 
-        # Splitting between module and function, if both exist
-        if "__lt_module_gt__" in symbol_name:
-            module_name, func_name = symbol_name.split("__lt_module_gt__", maxsplit=1)
-        else:
-            module_name = symbol_name.replace("__lt_module_gt_", "")  # stuff at the end
+        module_end = "__lt_module_gt_"
+        if symbol_name.endswith(module_end):
+            # It is only module name, no function
+            module_path = symbol_name[: -len(module_end)]
+            module_name, module_is_valid = resolve_module(module_path)
             func_name = ""
-
-        module_name, is_valid = resolve_module(module_name)
-        if not is_valid:
-            module_name = f"{INVALID_FILE_PREFIX}{module_name}"
         else:
-            func_name = resolve_function_name(func_name, module_name)
+            # Iterating from back to front, trying to resolve the valid module name
+            split_symbol = symbol_name.split("_")
+            for i in range(len(split_symbol), 0, -1):
+                module_part = "_".join(split_symbol[:i])
+                func_part = "_".join(split_symbol[i:])
+                module_name, module_is_valid = resolve_module(module_part)
+                func_name = resolve_function_name(func_part, module_name)
+                if module_is_valid:
+                    break
+            else:
+                module_is_valid = False
+                module_name = "_".join(split_symbol[:-1])
+                func_name = split_symbol[-1]
+
+        if not module_is_valid:
+            module_name = f"{INVALID_FILE_PREFIX}{module_name}"
 
         return module_name, func_name
 
@@ -286,13 +307,6 @@ def resolve_module(module_name: str) -> tuple[str, bool]:
         and "serialize/messages" in file_path
     ):
         file_path = file_path.replace("serialize/messages_", "serialize_messages/")
-    # Special case for src/trezor/ui/layouts, where both "tt" and "tt_v2" are valid
-    if (
-        not Path(settings.ROOT_DIR / file_path).exists()
-        and "ui/layouts/" in file_path
-        and "tt/v2_" in file_path
-    ):
-        file_path = file_path.replace("tt/v2_", "tt_v2/")
 
     # It may happen that the file does not exist - it may not even be a python file
     is_valid = Path(settings.ROOT_DIR / file_path).exists()

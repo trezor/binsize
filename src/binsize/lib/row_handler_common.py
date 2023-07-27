@@ -15,7 +15,14 @@ INVALID_FILE_PREFIX = "--invalid_file--"
 
 # Defining all the prefixes here at one place,
 # so we see they are not clashing with each other
-MPY_PREFIXES = ("fun_data_", "const_table_data_", "const_obj_", "raw_code_")
+MPY_PREFIXES = (
+    "fun_data_",
+    "const_qstr_table_data_",
+    "const_obj_table_data_",
+    "const_obj_",
+    "raw_code_",
+    "children_",
+)
 RUST_PREFIXES = (
     "trezor_lib",
     "compiler_builtins",

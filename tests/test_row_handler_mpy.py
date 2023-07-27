@@ -220,72 +220,82 @@ def test_resolve_module(symbol: str, module: str, is_valid: bool):
             "",
         ),
         (
-            "fun_data_apps_ethereum_sign_typed_data__lt_module_gt__validate_field_type",
+            "children_apps_eos_sign_tx__lt_module_gt_",
+            "src/apps/eos/sign_tx.py",
+            "",
+        ),
+        (
+            "raw_code_apps_ethereum_sign_typed_data_validate_field_type",
             "src/apps/ethereum/sign_typed_data.py",
             "validate_field_type()",
         ),
         (
-            "const_obj_storage_common__lt_module_gt_",
+            "fun_data_apps_ethereum_sign_typed_data_validate_field_type",
+            "src/apps/ethereum/sign_typed_data.py",
+            "validate_field_type()",
+        ),
+        (
+            "const_obj_storage_common",
             "src/storage/common.py",
             "",
         ),
         (
-            "const_obj_storage_common__lt_module_gt__0",
+            "const_obj_storage_common_0",
             "src/storage/common.py",
             "",
         ),
         (
-            "const_obj_storage_common__lt_module_gt__25",
+            "const_obj_storage_common_25",
             "src/storage/common.py",
             "",
         ),
         (
-            "const_table_data_apps_base__lt_module_gt__handle_Initialize",
+            "const_obj_apps_monero_xmr_serialize_messages_tx_rsig_bulletproof_0",
+            "src/apps/monero/xmr/serialize_messages/tx_rsig_bulletproof.py",
+            "",
+        ),
+        (
+            "fun_data_apps_base_handle_Initialize",
             "src/apps/base.py",
             "handle_Initialize()",
         ),
         (
-            "raw_code_apps_base__lt_module_gt__get_features",
+            "raw_code_apps_base_get_features",
             "src/apps/base.py",
             "get_features()",
         ),
         (
-            "raw_code_apps_unexisting_base__lt_module_gt__get_features",
-            "--invalid_file--src/apps/unexisting_base.py",
-            "get_features",
+            "raw_code_apps_unexisting_base_get_features",
+            "--invalid_file--apps_unexisting_base_get",
+            "features",
         ),
         (
-            "fun_data_apps_monero_xmr_bulletproof__lt_module_gt__BulletProofPlusBuilder__gprec_aux",
+            "fun_data_apps_monero_xmr_bulletproof_BulletProofPlusBuilder__gprec_aux",
             "src/apps/monero/xmr/bulletproof.py",
             "BulletProofPlusBuilder._gprec_aux()",
         ),
         (
-            "const_table_data_apps_bitcoin_sign_tx_approvers__lt_module_gt__Approver_finish_payment_request",
-            "src/apps/bitcoin/sign_tx/approvers.py",
-            "Approver.finish_payment_request()",
-        ),
-        (
-            "const_table_data_apps_bitcoin_sign_tx_approvers__lt_module_gt__BasicApprover_approve_orig_txids__lt_genexpr_gt_",
-            "src/apps/bitcoin/sign_tx/approvers.py",
-            "BasicApprover.approve_orig_txids()",
-        ),
-        (
-            "const_table_data_apps_bitcoin_keychain__lt_module_gt___get_schemas_for_coin__lt_listcomp_gt_2",
-            "src/apps/bitcoin/keychain.py",
-            "_get_schemas_for_coin()",
-        ),
-        (
-            "const_table_data_trezor_crypto_base32__lt_module_gt___lt_dictcomp_gt_",
-            "src/trezor/crypto/base32.py",
+            "const_qstr_table_data_apps_cardano_layout",
+            "src/apps/cardano/layout.py",
             "",
         ),
         (
-            "fun_data_storage_cache__lt_module_gt__stored_async_decorator_wrapper",
+            "const_obj_table_data_apps_cardano_layout",
+            "src/apps/cardano/layout.py",
+            "",
+        ),
+        (
+            "const_qstr_table_data_trezor_ui_layouts_tt_v2___init__",
+            "src/trezor/ui/layouts/tt_v2/__init__.py",
+            "",
+        ),
+        (
+            "fun_data_storage_cache_stored_async_decorator_wrapper",
             "src/storage/cache.py",
             "stored_async()",
         ),
         (
-            "fun_data_trezor_crypto_base58__lt_module_gt__blake256d_32",
+            "fun_data_trezor_crypto_base58_blake256d_32",
             "src/trezor/crypto/base58.py",
             "blake256d_32()",
         ),
@@ -298,7 +308,7 @@ def test_get_module_and_function(symbol: str, module: str, func: str):
 def test_add_basic_info_row_handlers():
     new_row = MPR.add_basic_info(
         mock_data_row(
-            symbol_name="const_table_data_apps_bitcoin_keychain__lt_module_gt___get_schemas_for_coin__lt_listcomp_gt_2"
+            symbol_name="fun_data_apps_bitcoin_keychain__get_schemas_for_coin__lt_listcomp_gt_"
         )
     )
     assert new_row.language == "mpy"
