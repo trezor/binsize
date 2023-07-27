@@ -89,10 +89,16 @@ def resolve_trezorlib_symbol(symbol_name: str) -> tuple[str, str]:
     for item in items:
         file_path += f"/{item}"
 
-    file_path = f"{file_path}.rs"
+    if Path(settings.ROOT_DIR / f"{file_path}.rs").exists():
+        file_path = f"{file_path}.rs"
+    else:
+        # could be that it points to mod.rs
+        mod_file_path = f"{file_path}/mod.rs"
 
-    if not Path(settings.ROOT_DIR / file_path).exists():
-        file_path = f"{INVALID_FILE_PREFIX}{file_path}"
+        if Path(settings.ROOT_DIR / mod_file_path).exists():
+            file_path = mod_file_path
+        else:
+            file_path = f"{INVALID_FILE_PREFIX}{file_path}.rs"
 
     if struct_name:
         struct_and_function = f"{struct_name}::{function_name}()"

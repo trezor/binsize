@@ -69,6 +69,11 @@ RR = RustRow()
             "embed/rust/src/micropython/ffi.rs",
             "_mp_map_t::used()",
         ),
+        (
+            "trezor_lib::ui::display::icon_over_icon::h0ccbff9102557c97",
+            "embed/rust/src/ui/display/mod.rs",
+            "icon_over_icon()",
+        ),
     ],
 )
 def test_get_module_and_function(symbol: str, module: str, func: str):
