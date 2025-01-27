@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "binsize"
-version = "0.1.4"
+version = "0.1.5"
 description = "Tool to analyze the size of a binary from .elf file"
 license = "MIT"
 authors = [
